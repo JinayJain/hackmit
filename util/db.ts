@@ -1,5 +1,8 @@
 import { CloudantV1 } from "@ibm-cloud/cloudant";
 
-const client = CloudantV1.newInstance({});
+const db = CloudantV1.newInstance({});
 
-export default client;
+export const LISTING_DB = "listing";
+export const USER_DB = "user";
+
+export default db;
