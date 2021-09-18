@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.6.7",
+    "@cloudant/cloudant": "^4.5.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@ibm-cloud/cloudant": "^0.0.19",
     "framer-motion": "^4",
     "next": "11.1.2",
     "react": "17.0.2",
