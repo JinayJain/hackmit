@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^1.0.15",
     "@chakra-ui/react": "^1.6.7",
     "@cloudant/cloudant": "^4.5.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@fontsource/poppins": "^4.5.0",
     "@ibm-cloud/cloudant": "^0.0.19",
     "framer-motion": "^4",
+    "fuse.js": "^6.4.6",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
