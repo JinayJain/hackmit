@@ -32,6 +32,12 @@ interface Listing {
   price: number;
   contact: string;
 }
+
+interface router {
+  query: {
+    id: string
+  }
+}
 import NavBar from "../../components/NavBar";
 
 export default function Listing() {
@@ -41,7 +47,7 @@ export default function Listing() {
   const [listings, setListings] = useState<Listing[]>();
   const [error, setError] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const finalRef = useRef()
+  const finalRef = useRef<any>();
   useEffect(() => {
     fetch("/api/listing")
       .then((res) => res.json())
@@ -65,7 +71,7 @@ export default function Listing() {
   useEffect(() => {
     setListing(getListing(router.query.id));
   }, [listings])
-  const getListing = (id: string) => {
+  const getListing = (id: any) => {
     return listings?.filter(listing =>  {
       return listing._id === id;
     })[0];
