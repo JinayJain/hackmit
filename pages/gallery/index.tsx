@@ -14,6 +14,7 @@ import {
     LinkBox,
     LinkOverlay,
     Spinner,
+    AspectRatio
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
@@ -240,10 +241,12 @@ const Gallery: NextPage = () => {
                                             <LinkOverlay
                                                 href={`/listing/${listing._id}`}
                                             ></LinkOverlay>
-                                            <Image
-                                                src={listing.image}
-                                                alt="listing picture"
-                                            ></Image>
+                                            <AspectRatio maxW="400px" ratio={1/1}>
+                                              <Image
+                                                  src={listing.image}
+                                                  alt="listing picture"
+                                              ></Image>
+                                            </AspectRatio>
                                             <Box p="3">
                                                 <Box
                                                     fontWeight="bold"
