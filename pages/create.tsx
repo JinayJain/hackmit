@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
@@ -26,8 +26,9 @@ function Create() {
 
     const uploadRef = useRef<HTMLInputElement | null>(null);
     const { ref, ...rest } = register("image", { required: true });
+    const [uploaded, setUploaded] = useState<File | undefined>();
 
-    const [imageName, setImageName] = React.useState<string | undefined>("");
+    const [imageName, setImageName] = useState<string | undefined>("");
 
     async function onSubmit(data: Record<string, any>) {
         try {
@@ -36,17 +37,22 @@ function Create() {
                 status: "info",
             });
 
-            const { title, description, price, image, college, contact } = data;
-            console.log(title, description, price, image);
-            console.log(image);
+            const { title, description, price, college, contact } = data;
+
+            if (!uploaded) {
+                throw new Error("No image uploaded");
+            }
+
+            const image = uploaded;
+
             const { url, img } = await fetch(
-                `/api/upload?filename=${image[0].name}`
+                `/api/upload?filename=${image.name}`
             ).then((res) => res.json());
 
             // send the file to S3
             const imgUrl = await fetch(url, {
                 method: "PUT",
-                body: image[0],
+                body: image,
             }).then((res) => res.text());
 
             console.log("test");
@@ -143,6 +149,7 @@ function Create() {
                                 {...rest}
                                 style={{ display: "none" }}
                                 onChange={(e) => {
+                                    setUploaded(e.target.files?.[0]);
                                     setImageName(e.target.files?.[0].name);
                                 }}
                             />

@@ -21,7 +21,9 @@ import {
     useDisclosure,
     LinkBox,
     LinkOverlay,
-    AspectRatio
+    AspectRatio,
+    Heading,
+    Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import styles from "./card.module.css";
@@ -31,6 +33,7 @@ interface Listing {
     image: string;
     description: string;
     price: number;
+    college: string;
     contact: string;
 }
 
@@ -98,7 +101,7 @@ export default function Listing() {
                 {listing !== undefined ? (
                     <Grid templateColumns="repeat(18, 1fr)" gap={50}>
                         <GridItem colSpan={7}>
-                                <AspectRatio maxW="400px" ratio={1/1}>
+                            <AspectRatio maxW="400px" ratio={1 / 1}>
                                 <Image
                                     src={listing.image}
                                     alt={listing.name}
@@ -107,7 +110,7 @@ export default function Listing() {
                                     }
                                     // boxSize={"450px"}
                                 />
-                                </AspectRatio>
+                            </AspectRatio>
                         </GridItem>
                         <GridItem colSpan={8}>
                             <Box>
@@ -118,6 +121,9 @@ export default function Listing() {
                                 >
                                     {listing.name}
                                 </Box>
+                                <Text color="gray.500" fontSize="md">
+                                    {listing.college}
+                                </Text>
                                 <Divider
                                     orientation="horizontal"
                                     color="#FF8C00"
@@ -187,35 +193,35 @@ export default function Listing() {
                         isLoaded && listings && listings.length > 0 ? (
                             listings.slice(0, 9).map((listing: Listing) => (
                                 <LinkBox key={listing._id}>
-                                <Box
+                                    <Box
+                                        maxW="sm"
+                                        borderWidth="1px"
+                                        borderRadius="lg"
+                                        overflow="hidden"
+                                        m="10px"
+                                        className={styles.card}
+                                    >
+                                        <LinkOverlay
+                                            href={`/listing/${listing._id}`}
+                                        ></LinkOverlay>
+                                        <AspectRatio maxW="400px" ratio={1 / 1}>
+                                            <Image
+                                                src={listing.image}
+                                                alt="listing picture"
+                                            ></Image>
+                                        </AspectRatio>
+                                        <Box p="3">
+                                            <Box
+                                                fontWeight="bold"
+                                                fontSize="2xl"
+                                                as="h2"
+                                            >
+                                                {listing.name}
+                                            </Box>
 
-                                    maxW="sm"
-                                    borderWidth="1px"
-                                    borderRadius="lg"
-                                    overflow="hidden"
-                                    m="10px"
-                                    className={styles.card}
-                                >
-                                    <LinkOverlay href={`/listing/${listing._id}`}>
-                                    </LinkOverlay>
-                                    <AspectRatio maxW="400px" ratio={1/1}>
-                                    <Image
-                                        src={listing.image}
-                                        alt="listing picture"
-                                    ></Image>
-                                    </AspectRatio>
-                                    <Box p="3">
-                                        <Box
-                                            fontWeight="bold"
-                                            fontSize="2xl"
-                                            as="h2"
-                                        >
-                                            {listing.name}
+                                            <Box>${listing.price}</Box>
                                         </Box>
-
-                                        <Box>${listing.price}</Box>
                                     </Box>
-                                </Box>
                                 </LinkBox>
                             ))
                         ) : (
@@ -235,7 +241,8 @@ export default function Listing() {
                         <ModalHeader>Modal Title</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            Contact info: {listing? listing.contact: "loading"}
+                            Contact info:{" "}
+                            {listing ? listing.contact : "loading"}
                         </ModalBody>
 
                         <ModalFooter>
