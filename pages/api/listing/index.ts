@@ -1,6 +1,7 @@
 import { DrawerCloseButton } from "@chakra-ui/modal";
 import { NextApiRequest, NextApiResponse } from "next";
 import db, { LISTING_DB } from "../../../util/db";
+import nlu from "../../../util/watson";
 
 export default async function handler(
     req: NextApiRequest,
@@ -42,6 +43,22 @@ export default async function handler(
                         contact
                     );
 
+                    // generate a list of tags from the description using the IBM Watson NLU API
+
+                    const tags = await nlu
+                        .analyze({
+                            text: description,
+                            features: {
+                                keywords: {
+                                    limit: 3,
+                                },
+                            },
+                        })
+                        .then((response) => response.result.keywords)
+                        .then((kws) => kws?.map((kw) => kw.text));
+
+                    console.log(tags);
+
                     const response = await db.postDocument({
                         db: LISTING_DB,
                         document: {
@@ -51,6 +68,7 @@ export default async function handler(
                             image,
                             college,
                             contact,
+                            tags,
                         },
                     });
 

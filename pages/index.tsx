@@ -67,7 +67,7 @@ const Home: NextPage = () => {
                                     onSuggestionsFetchRequested={({
                                         value,
                                     }) => {
-                                        if (value.length > 15) {
+                                        if (value.length > 20) {
                                             setSuggestions(schools.slice(0, 5));
                                         } else {
                                             setSuggestions(
