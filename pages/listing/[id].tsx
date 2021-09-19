@@ -7,9 +7,7 @@ import {
     Flex,
     Grid,
     GridItem,
-    InputLeftElement,
-    Input,
-    InputGroup,
+    Spinner,
     Box,
     Image,
     Square,
@@ -74,9 +72,24 @@ export default function Listing() {
         })[0];
     };
 
-    return (
+    return !isLoaded ? (
         <>
-            <NavBar></NavBar>
+            <Flex justifyContent="center" alignItems="center">
+                <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                    // position="absolute"
+                    // top="50%"
+                    // left="50%"
+                />
+            </Flex>
+        </>
+    ) : (
+        <>
+            <NavBar />
             <Container width="90%" maxW="90%" mx="5%" my="50px" px="0">
                 {/* <Navbar /> */}
                 {listing !== undefined ? (
