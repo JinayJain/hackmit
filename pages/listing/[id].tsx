@@ -19,6 +19,8 @@ import {
     ModalHeader,
     ModalCloseButton,
     useDisclosure,
+    LinkBox,
+    LinkOverlay
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import styles from "./card.module.css";
@@ -183,8 +185,9 @@ export default function Listing() {
                     {!error ? (
                         isLoaded && listings && listings.length > 0 ? (
                             listings.slice(0, 9).map((listing: Listing) => (
+                                <LinkBox key={listing._id}>
                                 <Box
-                                    key={listing._id}
+
                                     maxW="sm"
                                     borderWidth="1px"
                                     borderRadius="lg"
@@ -192,6 +195,8 @@ export default function Listing() {
                                     m="10px"
                                     className={styles.card}
                                 >
+                                    <LinkOverlay href={`/listing/${listing._id}`}>
+                                    </LinkOverlay>
                                     <Image
                                         src={listing.image}
                                         alt="listing picture"
@@ -208,6 +213,7 @@ export default function Listing() {
                                         <Box>${listing.price}</Box>
                                     </Box>
                                 </Box>
+                                </LinkBox>
                             ))
                         ) : (
                             <Box>No items founds</Box>
