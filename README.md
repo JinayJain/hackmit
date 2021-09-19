@@ -7,7 +7,7 @@ We are building a platform to facilitate the sustainable usage of goods by offer
 
 
 ## Tech Stack
-We used React.js, Next.js, Chakra-UI, IBM Cloudant and AWS S3 Bucket for our tech stack.
+We used Next.js, ReactJS, IBM Cloudant, Chakra UI, Vercel, IBM Cloud Object Storage, Figma,HTMLCSS, TypeScript, and IBM Watson Natural Language Understanding
 
 ## Pictures
 Homepage
