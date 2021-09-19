@@ -15,9 +15,9 @@ import {
   Square,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-
+import styles from "./card.module.css";
 interface Listing {
-  id: string;
+  _id: string;
   name: string;
   image: string;
   description: string;
@@ -27,23 +27,35 @@ interface Listing {
 export default function Listing() {
   const router = useRouter();
   const [listing, setListing] = useState<Listing>();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [listings, setListings] = useState<Listing[]>();
+  const [error, setError] = useState(false);
   useEffect(() => {
-    // setListing(getListing(router.query.id))
-    setListing({
-      id: "123123",
-      name: "Good quality desk",
-      image:
-        "https://www.furnitureintherawtx.com/wp-content/uploads/2021/02/clearance1.jpg",
-      description: `asdfjasdf. asl;jfa;sldkjf;lkasdf /asdf as;ldkfja;lskdjf;lasdf./asd/fas dflkjasdf
-      a;lksdf;alskdjf;lakjas;ldkj;lkajsdf;lkjsad;lkjfas
-      asdfl;kasdjf;laksdjf;laksd;lfasdklvnkejwfnbkwefnvkwevkjewdfnskjvsdfnjkvdfsv
-      sdffjksdnjknrwklbnkljnfkjvkljdnvkljdsfsnvks
-      alksdjfalskjdnfas
-      asdfjasdlkfjasdlkjfas
-      asdfalskjdfa`,
-      price: 29.945,
-    });
+    fetch("/api/listing")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          console.log(result);
+          setListings(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+    setListing(getListing(router.query.id))
+   
   }, []);
+
+  const getListing = (id: string) => {
+    return listings?.filter(listing =>  {
+      return listing._id === id;
+    })[0];
+  }
+  
+
+
   return (
     <>
       <Container width="90%" maxW="90%" mx="5%" my="50px" px="0">
@@ -118,7 +130,36 @@ export default function Listing() {
         <Box mt="50px" fontSize="3xl" fontWeight="medium">
           Recommended Items
         </Box>
-        {/* <Recommendations /> */}
+        <Box d="flex">
+          {!error ? (
+            isLoaded && listings && listings.length > 0 ? (
+              listings.slice(0, 9).map((listing: Listing) => (
+                <Box
+                  key={listing._id}
+                  maxW="sm"
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  m="10px"
+                  className={styles.card}
+                >
+                  <Image src={listing.image} alt="listing picture"></Image>
+                  <Box p="3">
+                    <Box fontWeight="bold" fontSize="2xl" as="h2">
+                      {listing.name}
+                    </Box>
+
+                    <Box>${listing.price}</Box>
+                  </Box>
+                </Box>
+              ))
+            ) : (
+              <Box>No items founds</Box>
+            )
+          ) : (
+            <Box>Error, please try again</Box>
+          )}
+        </Box>
       </Container>
     </>
   );
