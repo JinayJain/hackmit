@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   Container,
@@ -13,6 +13,14 @@ import {
   Box,
   Image,
   Square,
+  Modal,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import styles from "./card.module.css";
@@ -22,7 +30,9 @@ interface Listing {
   image: string;
   description: string;
   price: number;
+  contact: string;
 }
+import NavBar from "../../components/NavBar.tsx";
 
 export default function Listing() {
   const router = useRouter();
@@ -30,6 +40,8 @@ export default function Listing() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [listings, setListings] = useState<Listing[]>();
   const [error, setError] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const finalRef = useRef()
   useEffect(() => {
     fetch("/api/listing")
       .then((res) => res.json())
@@ -44,20 +56,24 @@ export default function Listing() {
           setError(error);
         }
       );
-    setListing(getListing(router.query.id))
+      console.log(getListing(router.query.id));
+
    
   }, []);
 
+
+  useEffect(() => {
+    setListing(getListing(router.query.id));
+  }, [listings])
   const getListing = (id: string) => {
     return listings?.filter(listing =>  {
       return listing._id === id;
     })[0];
   }
   
-
-
   return (
     <>
+      <NavBar></NavBar>
       <Container width="90%" maxW="90%" mx="5%" my="50px" px="0">
         {/* <Navbar /> */}
         {listing !== undefined ? (
@@ -112,6 +128,7 @@ export default function Listing() {
                         "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
                     }}
                     _focus={{ bg: "#FF8C00" }}
+                    onClick={onOpen}
                   >
                     Claim
                   </Button>
@@ -160,6 +177,23 @@ export default function Listing() {
             <Box>Error, please try again</Box>
           )}
         </Box>
+        <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* Contact info: {listing.contact} */}
+            Contact Info: 
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       </Container>
     </>
   );
