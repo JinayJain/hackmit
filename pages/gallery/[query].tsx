@@ -38,7 +38,9 @@ const Gallery: NextPage = () => {
   const [query, setQuery] = useState("");
   const [priceMax, setPriceMax] = useState(400);
   const [priceMin, setPriceMin] = useState(0);
-  const [college, setCollege] = useState(router.query.query);
+  const [college, setCollege] = useState(
+    !Array.isArray(router.query.query) ? router.query.query : ""
+  );
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [advancedFiltered, setAdvancedFiltered] = useState<Listing[]>([]);
