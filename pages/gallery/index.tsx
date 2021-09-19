@@ -14,7 +14,8 @@ import {
     LinkBox,
     LinkOverlay,
     Spinner,
-    AspectRatio
+    AspectRatio,
+    Tag,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
@@ -28,6 +29,7 @@ interface Listing {
     college: string;
     description: string;
     image: string;
+    tags: string[];
 }
 const getArraysIntersection = (a1: Array<string>, a2: Array<string>) => {
     return a1.filter(function (n: any) {
@@ -61,7 +63,7 @@ const Gallery: NextPage = () => {
                     setError(error);
                 }
             );
-    }, []);
+    });
 
     useEffect(() => {
         // console.log(advancedFiltered);
@@ -229,12 +231,30 @@ const Gallery: NextPage = () => {
                                             <LinkOverlay
                                                 href={`/listing/${listing._id}`}
                                             ></LinkOverlay>
-                                            <AspectRatio maxW="400px" ratio={1/1}>
-                                              <Image
-                                                  src={listing.image}
-                                                  alt="listing picture"
-                                              ></Image>
+                                            <AspectRatio
+                                                maxW="400px"
+                                                ratio={1 / 1}
+                                            >
+                                                <Image
+                                                    src={listing.image}
+                                                    alt="listing picture"
+                                                ></Image>
                                             </AspectRatio>
+                                            <Box pl="10px">
+                                                <HStack>
+                                                    {listing.tags.map(
+                                                        (tag, index) => (
+                                                            <Tag
+                                                                colorScheme="orange"
+                                                                key={`${tag}${index}`}
+                                                            >
+                                                                {tag}
+                                                            </Tag>
+                                                        )
+                                                    )}
+                                                    ;
+                                                </HStack>
+                                            </Box>
                                             <Box p="3">
                                                 <Box
                                                     fontWeight="bold"

@@ -21,6 +21,8 @@ import {
     useDisclosure,
     LinkBox,
     LinkOverlay,
+    HStack,
+    Tag,
     AspectRatio
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -32,6 +34,7 @@ interface Listing {
     description: string;
     price: number;
     contact: string;
+    tags: string[];
 }
 
 interface router {
@@ -204,7 +207,13 @@ export default function Listing() {
                                         alt="listing picture"
                                     ></Image>
                                     </AspectRatio>
-                                    <Box p="3">
+                                    <Box pl="10px">
+                                        <HStack>
+                                          {listing.tags.map((tag, index)=> (
+                                            <Tag colorScheme="orange" key={`${tag}${index}`}>{tag}</Tag>
+                                          ))};
+                                        </HStack>
+                                    </Box>
                                         <Box
                                             fontWeight="bold"
                                             fontSize="2xl"
@@ -214,7 +223,6 @@ export default function Listing() {
                                         </Box>
 
                                         <Box>${listing.price}</Box>
-                                    </Box>
                                 </Box>
                                 </LinkBox>
                             ))

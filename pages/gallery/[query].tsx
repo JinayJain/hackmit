@@ -13,6 +13,7 @@ import {
     Stack,
     Spinner,
     HStack,
+    Tag,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
@@ -25,6 +26,7 @@ interface Listing {
     college: string;
     description: string;
     image: string;
+    tags: string[];
 }
 const getArraysIntersection = (a1: Array<string>, a2: Array<string>) => {
     return a1.filter(function (n: any) {
@@ -46,25 +48,37 @@ const Gallery: NextPage = () => {
     const [error, setError] = useState(false);
     const [advancedFiltered, setAdvancedFiltered] = useState<Listing[]>([]);
     useEffect(() => {
-        fetch("/api/listing")
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    //   console.log(result);
-                    setListingData(result);
-                    setAdvancedFiltered(result);
-                    console.log(result);
-                    if (!Array.isArray(router.query.query)) {
-                        console.log("HERE");
-                        search(priceMin, priceMax, query, router.query.query);
-                    }
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            );
+        // fetch("/api/listing")
+        //     .then((res) => res.json())
+        //     .then(
+        //         (result) => {
+        //             setIsLoaded(true);
+        //             //   console.log(result);
+        //             setListingData(result);
+        //             setAdvancedFiltered(result);
+        //             console.log(result);
+        //             if (!Array.isArray(router.query.query)) {
+        //                 console.log("HERE");
+        //                 search(priceMin, priceMax, query, router.query.query);
+        //             }
+        //         },
+        //         (error) => {
+        //             setIsLoaded(true);
+        //             setError(error);
+        //         }
+        //     );
+          
+            setListingData([
+              {
+                "_id": "123214214321",
+                "price": 12,
+                "name": "test",
+                "description":"testing",
+                "image": "testing more",
+                "college": "University of Delaware",
+                "tags": ["test", "test1", "test2"]
+              }
+            ])
     }, []);
 
     useEffect(() => {
@@ -235,6 +249,8 @@ const Gallery: NextPage = () => {
                                             src={listing.image}
                                             alt="listing picture"
                                         ></Image>
+
+                                        
                                         <Box p="3">
                                             <Box
                                                 fontWeight="bold"
