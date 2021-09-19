@@ -12,7 +12,8 @@ import {
   Stack,
   HStack,
   LinkBox,
-  LinkOverlay
+  LinkOverlay,
+  Spinner
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
