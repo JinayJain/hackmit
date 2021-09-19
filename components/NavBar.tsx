@@ -242,6 +242,6 @@ const NAV_ITEMS: Array<NavItem> = [
       }
     ],
   }
-];const NavBar = () => {
+]; const NavBar = () => {
 
 }
