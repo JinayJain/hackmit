@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/input";
@@ -11,10 +11,12 @@ import { GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
 import { useToast } from "@chakra-ui/toast";
 import { ContainerAuthenticator } from "ibm-cloud-sdk-core";
+
+import { useRouter } from "next/dist/client/router";
 import NavBar from "../components/NavBar";
 
-
 function Create() {
+    const router = useRouter();
     const toast = useToast();
     const {
         register,
@@ -24,8 +26,9 @@ function Create() {
 
     const uploadRef = useRef<HTMLInputElement | null>(null);
     const { ref, ...rest } = register("image", { required: true });
+    const [uploaded, setUploaded] = useState<File | undefined>();
 
-    const [imageName, setImageName] = React.useState<string | undefined>("");
+    const [imageName, setImageName] = useState<string | undefined>("");
 
     async function onSubmit(data: Record<string, any>) {
         try {
@@ -34,17 +37,22 @@ function Create() {
                 status: "info",
             });
 
-            const { title, description, price, image, college, contact } = data;
-            console.log(title, description, price, image);
-            console.log(image);
+            const { title, description, price, college, contact } = data;
+
+            if (!uploaded) {
+                throw new Error("No image uploaded");
+            }
+
+            const image = uploaded;
+
             const { url, img } = await fetch(
-                `/api/upload?filename=${image[0].name}`
+                `/api/upload?filename=${image.name}`
             ).then((res) => res.json());
 
             // send the file to S3
             const imgUrl = await fetch(url, {
                 method: "PUT",
-                body: image[0],
+                body: image,
             }).then((res) => res.text());
 
             console.log("test");
@@ -65,6 +73,13 @@ function Create() {
             });
 
             console.log(res);
+
+            toast({
+                title: "Listing created!",
+                status: "success",
+            });
+
+            router.push("/");
         } catch (err) {
             console.log(err);
 
@@ -86,85 +101,87 @@ function Create() {
 
     return (
         <>
-        <NavBar/>
-        <Box maxW="1000px" margin="auto">
-            <Heading mt={8} mb={4}>
-                Create Listing
-            </Heading>
-            <Stack spacing={4}>
-                <FormControl isRequired={true} isInvalid={errors.title}>
-                    <FormLabel>Title</FormLabel>
-                    <Input
-                        placeholder="Title"
-                        {...register("title", { required: true })}
-                    />
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Price</FormLabel>
-                    <NumberInput precision={2}>
-                        <NumberInputField
-                            placeholder="$"
-                            {...register("price", { required: true })}
+            <NavBar />
+            <Box maxW="1000px" margin="auto">
+                <Heading mt={8} mb={4}>
+                    Create Listing
+                </Heading>
+                <Stack spacing={4}>
+                    <FormControl isRequired={true} isInvalid={errors.title}>
+                        <FormLabel>Title</FormLabel>
+                        <Input
+                            placeholder="Title"
+                            {...register("title", { required: true })}
                         />
-                    </NumberInput>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                        placeholder="Describe your listing"
-                        {...register("description", { required: true })}
-                    ></Textarea>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Image</FormLabel>
-                    <InputGroup>
-                        <InputLeftAddon
-                            as={Button}
-                            onClick={() => uploadRef.current?.click()}
-                        >
-                            Upload File
-                        </InputLeftAddon>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={(e) => {
-                                ref(e);
-                                uploadRef.current = e;
-                            }}
-                            {...rest}
-                            style={{ display: "none" }}
-                            onChange={(e) => {
-                                setImageName(e.target.files?.[0].name);
-                            }}
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Price</FormLabel>
+                        <NumberInput precision={2} min={0}>
+                            <NumberInputField
+                                placeholder="$"
+                                {...register("price", { required: true })}
+                            />
+                        </NumberInput>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Description</FormLabel>
+                        <Textarea
+                            placeholder="Describe your listing"
+                            {...register("description", { required: true })}
+                        ></Textarea>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Image</FormLabel>
+                        <InputGroup>
+                            <InputLeftAddon
+                                as={Button}
+                                onClick={() => uploadRef.current?.click()}
+                            >
+                                Upload File
+                            </InputLeftAddon>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={(e) => {
+                                    ref(e);
+                                    uploadRef.current = e;
+                                    console.log(e);
+                                }}
+                                {...rest}
+                                style={{ display: "none" }}
+                                onChange={(e) => {
+                                    setUploaded(e.target.files?.[0]);
+                                    setImageName(e.target.files?.[0].name);
+                                }}
+                            />
+                            <Input readOnly={true} value={imageName} />
+                        </InputGroup>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>College</FormLabel>
+                        <Input
+                            placeholder="College"
+                            {...register("college", { required: true })}
                         />
-                        <Input readOnly={true} value={imageName} />
-                    </InputGroup>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>College</FormLabel>
-                    <Input
-                        placeholder="College"
-                        {...register("college", { required: true })}
-                    />
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Contact Info</FormLabel>
-                    <Textarea
-                        placeholder="Contact info"
-                        {...register("contact", { required: true })}
-                    ></Textarea>
-                </FormControl>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Contact Info</FormLabel>
+                        <Textarea
+                            placeholder="Contact info"
+                            {...register("contact", { required: true })}
+                        ></Textarea>
+                    </FormControl>
 
-                <Box>
-                    <Button
-                        colorScheme="orange"
-                        onClick={handleSubmit(onSubmit, onError)}
-                    >
-                        Submit
-                    </Button>
-                </Box>
-            </Stack>
-        </Box>
+                    <Box>
+                        <Button
+                            colorScheme="orange"
+                            onClick={handleSubmit(onSubmit, onError)}
+                        >
+                            Submit
+                        </Button>
+                    </Box>
+                </Stack>
+            </Box>
         </>
     );
 }

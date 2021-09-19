@@ -21,6 +21,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
 import styles from "./gallery.module.css";
 import NavBar from "../../components/NavBar";
+import { useRouter } from "next/router";
 
 interface Listing {
     _id: string;
@@ -38,12 +39,22 @@ const getArraysIntersection = (a1: Array<string>, a2: Array<string>) => {
 };
 
 const Gallery: NextPage = () => {
+    const router = useRouter();
+
+    const { college: collegeSearch } = router.query;
+
     const [listingData, setListingData] = useState<Listing[]>([]);
     // const [filtered, setFiltered] = useState<string[]>([]);
     const [query, setQuery] = useState("");
     const [priceMax, setPriceMax] = useState(400);
     const [priceMin, setPriceMin] = useState(0);
-    const [college, setCollege] = useState("");
+    const [college, setCollege] = useState(() => {
+        if (collegeSearch) {
+            return collegeSearch as string;
+        } else {
+            return "";
+        }
+    });
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
     const [advancedFiltered, setAdvancedFiltered] = useState<Listing[]>([]);
@@ -52,22 +63,23 @@ const Gallery: NextPage = () => {
             .then((res) => res.json())
             .then(
                 (result) => {
-                    setIsLoaded(true);
                     //   console.log(result);
                     setListingData(result);
                     setAdvancedFiltered(result);
                     console.log(result);
+                    setIsLoaded(true);
                 },
                 (error) => {
-                    setIsLoaded(true);
                     setError(error);
+                    setIsLoaded(true);
                 }
             );
-    });
+    }, []);
 
     useEffect(() => {
-        // console.log(advancedFiltered);
-    }, [advancedFiltered]);
+        search(priceMin, priceMax, query, collegeSearch as string);
+        console.log(isLoaded);
+    }, [isLoaded]);
 
     const search = (
         priceMinSearch?: any,
@@ -209,6 +221,7 @@ const Gallery: NextPage = () => {
                             w="1xl"
                             onChange={findCollege}
                             placeholder="University"
+                            defaultValue={college}
                         ></Input>
                     </HStack>
                 </Box>
@@ -241,7 +254,7 @@ const Gallery: NextPage = () => {
                                                 ></Image>
                                             </AspectRatio>
                                             <Box pl="10px">
-                                                <HStack>
+                                                <HStack pt="5px">
                                                     {listing.tags.map(
                                                         (tag, index) => (
                                                             <Tag
