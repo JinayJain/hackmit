@@ -1,29 +1,35 @@
 {
-  "name": "hackmit",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@chakra-ui/icons": "^1.0.15",
-    "@chakra-ui/react": "^1.6.7",
-    "@cloudant/cloudant": "^4.5.1",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
-    "@ibm-cloud/cloudant": "^0.0.19",
-    "framer-motion": "^4",
-    "next": "11.1.2",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
-  },
-  "devDependencies": {
-    "@types/react": "17.0.21",
-    "eslint": "7.32.0",
-    "eslint-config-next": "11.1.2",
-    "typescript": "4.4.3"
-  }
+    "name": "hackmit",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@chakra-ui/icons": "^1.0.15",
+        "@chakra-ui/react": "^1.6.7",
+        "@cloudant/cloudant": "^4.5.1",
+        "@emotion/react": "^11",
+        "@emotion/styled": "^11",
+        "@ibm-cloud/cloudant": "^0.0.19",
+        "framer-motion": "^4",
+        "ibm-cos-sdk": "^1.10.2",
+        "next": "11.1.2",
+        "react": "17.0.2",
+        "react-dom": "17.0.2",
+        "react-hook-form": "^7.15.3",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@types/react": "17.0.21",
+        "@types/uuid": "^8.3.1",
+        "eslint": "7.32.0",
+        "eslint-config-next": "11.1.2",
+        "prettier": "^2.4.1",
+        "pretty-quick": "^3.1.1",
+        "typescript": "4.4.3"
+    }
 }

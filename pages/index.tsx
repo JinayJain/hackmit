@@ -5,16 +5,16 @@ import { Box } from "@chakra-ui/react";
 import db from "../util/db";
 
 const Home: NextPage = () => {
-  return <Box>hacc mit</Box>;
+    return <Box>hacc mit</Box>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const dbs = await db.getAllDbs();
-  console.log(dbs.result);
+    const dbs = await db.getAllDbs();
+    console.log(dbs.result);
 
-  return {
-    props: {},
-  };
+    return {
+        props: {},
+    };
 };
 
 export default Home;
