@@ -145,6 +145,7 @@ function Create() {
                                 ref={(e) => {
                                     ref(e);
                                     uploadRef.current = e;
+                                    console.log(e);
                                 }}
                                 {...rest}
                                 style={{ display: "none" }}

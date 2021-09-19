@@ -238,7 +238,7 @@ export default function Listing() {
                 >
                     <ModalOverlay />
                     <ModalContent>
-                        <ModalHeader>Modal Title</ModalHeader>
+                        <ModalHeader>Contact Info</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
                             Contact info:{" "}
