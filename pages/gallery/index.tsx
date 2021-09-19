@@ -12,7 +12,8 @@ import {
   Stack,
   HStack,
   LinkBox,
-  LinkOverlay
+  LinkOverlay,
+  Spinner
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
@@ -203,7 +204,7 @@ const Gallery: NextPage = () => {
         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
           {/* {console.log(advancedFiltered)} */}
           {!error ? (
-            isLoaded && advancedFiltered.length > 0 ? (
+            isLoaded ? ( advancedFiltered.length > 0 ? (
               advancedFiltered.map((listing: Listing) => (
                 <LinkBox
                   key={listing._id}
@@ -232,6 +233,14 @@ const Gallery: NextPage = () => {
               <Box>No items founds</Box>
             )
           ) : (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          )): (
             <Box>Error, please try again</Box>
           )}
         </Grid>
