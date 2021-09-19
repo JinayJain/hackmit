@@ -36,6 +36,7 @@ function Create() {
                 status: "info",
             });
 
+            console.log(data);
             const { title, description, price, image, college, contact } = data;
             console.log(title, description, price, image);
             console.log(image);
@@ -139,10 +140,12 @@ function Create() {
                                 ref={(e) => {
                                     ref(e);
                                     uploadRef.current = e;
+                                    console.log(e);
                                 }}
                                 {...rest}
                                 style={{ display: "none" }}
                                 onChange={(e) => {
+                                    console.log(e);
                                     setImageName(e.target.files?.[0].name);
                                 }}
                             />
