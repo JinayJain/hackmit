@@ -20,7 +20,8 @@ import {
     ModalCloseButton,
     useDisclosure,
     LinkBox,
-    LinkOverlay
+    LinkOverlay,
+    AspectRatio
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import styles from "./card.module.css";
@@ -97,7 +98,7 @@ export default function Listing() {
                 {listing !== undefined ? (
                     <Grid templateColumns="repeat(18, 1fr)" gap={50}>
                         <GridItem colSpan={7}>
-                            <Square size="100%" mr="70px" alignItems="start">
+                                <AspectRatio maxW="400px" ratio={1/1}>
                                 <Image
                                     src={listing.image}
                                     alt={listing.name}
@@ -106,7 +107,7 @@ export default function Listing() {
                                     }
                                     // boxSize={"450px"}
                                 />
-                            </Square>
+                                </AspectRatio>
                         </GridItem>
                         <GridItem colSpan={8}>
                             <Box>
@@ -197,10 +198,12 @@ export default function Listing() {
                                 >
                                     <LinkOverlay href={`/listing/${listing._id}`}>
                                     </LinkOverlay>
+                                    <AspectRatio maxW="400px" ratio={1/1}>
                                     <Image
                                         src={listing.image}
                                         alt="listing picture"
                                     ></Image>
+                                    </AspectRatio>
                                     <Box p="3">
                                         <Box
                                             fontWeight="bold"
@@ -232,8 +235,7 @@ export default function Listing() {
                         <ModalHeader>Modal Title</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            {/* Contact info: {listing.contact} */}
-                            Contact Info:
+                            Contact info: {listing? listing.contact: "loading"}
                         </ModalBody>
 
                         <ModalFooter>

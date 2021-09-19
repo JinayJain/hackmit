@@ -38,7 +38,7 @@ function Create() {
 
             const { title, description, price, image, college, contact } = data;
             console.log(title, description, price, image);
-
+            console.log(image);
             const { url, img } = await fetch(
                 `/api/upload?filename=${image[0].name}`
             ).then((res) => res.json());
