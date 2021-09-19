@@ -32,7 +32,7 @@ interface Listing {
   price: number;
   contact: string;
 }
-import NavBar from "../../components/NavBar.tsx";
+import NavBar from "../../components/NavBar";
 
 export default function Listing() {
   const router = useRouter();
