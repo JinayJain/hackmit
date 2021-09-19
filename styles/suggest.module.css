@@ -1,0 +1,15 @@
+.suggestion {
+    list-style: none;
+}
+
+.suggestionsList {
+    max-height: 400px;
+    background-color: white;
+
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.container {
+    width: 100%;
+}
