@@ -163,7 +163,7 @@ const Gallery: NextPage = () => {
     <>
       <Container maxW="container.lg">
         <Box w="100px"></Box>
-        <Box mt="50px" mb="50px" mx="10px">
+        <Box mt="50px" mb="30px" mx="10px">
           <HStack>
             <InputGroup style={{ borderColor: "#FFC176" }}>
               <InputLeftElement pointerEvents="none">
@@ -198,7 +198,7 @@ const Gallery: NextPage = () => {
           </HStack>
         </Box>
 
-        <Grid templateColumns="repeat(3, 1fr)" gap={12}>
+        <Grid templateColumns="repeat(3, 1fr)" gap={4}>
           {/* {console.log(advancedFiltered)} */}
           {!error ? (
             isLoaded && advancedFiltered.length > 0 ? (
