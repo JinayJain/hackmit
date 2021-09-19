@@ -22,8 +22,7 @@ Individual listing page
 
 ## Running Dev Environment
 
-First, run the development server:![Uploading Screenshot from 2021-09-19 12-16-07.png…]()
-
+First, run the development server:
 
 ```bash
 npm run dev
