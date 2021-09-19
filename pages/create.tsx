@@ -11,10 +11,12 @@ import { GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
 import { useToast } from "@chakra-ui/toast";
 import { ContainerAuthenticator } from "ibm-cloud-sdk-core";
+
+import { useRouter } from "next/dist/client/router";
 import NavBar from "../components/NavBar";
 
-
 function Create() {
+    const router = useRouter();
     const toast = useToast();
     const {
         register,
@@ -65,6 +67,13 @@ function Create() {
             });
 
             console.log(res);
+
+            toast({
+                title: "Listing created!",
+                status: "success",
+            });
+
+            router.push("/");
         } catch (err) {
             console.log(err);
 
@@ -86,85 +95,85 @@ function Create() {
 
     return (
         <>
-        <NavBar/>
-        <Box maxW="1000px" margin="auto">
-            <Heading mt={8} mb={4}>
-                Create Listing
-            </Heading>
-            <Stack spacing={4}>
-                <FormControl isRequired={true} isInvalid={errors.title}>
-                    <FormLabel>Title</FormLabel>
-                    <Input
-                        placeholder="Title"
-                        {...register("title", { required: true })}
-                    />
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Price</FormLabel>
-                    <NumberInput precision={2}>
-                        <NumberInputField
-                            placeholder="$"
-                            {...register("price", { required: true })}
+            <NavBar />
+            <Box maxW="1000px" margin="auto">
+                <Heading mt={8} mb={4}>
+                    Create Listing
+                </Heading>
+                <Stack spacing={4}>
+                    <FormControl isRequired={true} isInvalid={errors.title}>
+                        <FormLabel>Title</FormLabel>
+                        <Input
+                            placeholder="Title"
+                            {...register("title", { required: true })}
                         />
-                    </NumberInput>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Description</FormLabel>
-                    <Textarea
-                        placeholder="Describe your listing"
-                        {...register("description", { required: true })}
-                    ></Textarea>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Image</FormLabel>
-                    <InputGroup>
-                        <InputLeftAddon
-                            as={Button}
-                            onClick={() => uploadRef.current?.click()}
-                        >
-                            Upload File
-                        </InputLeftAddon>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={(e) => {
-                                ref(e);
-                                uploadRef.current = e;
-                            }}
-                            {...rest}
-                            style={{ display: "none" }}
-                            onChange={(e) => {
-                                setImageName(e.target.files?.[0].name);
-                            }}
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Price</FormLabel>
+                        <NumberInput precision={2}>
+                            <NumberInputField
+                                placeholder="$"
+                                {...register("price", { required: true })}
+                            />
+                        </NumberInput>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Description</FormLabel>
+                        <Textarea
+                            placeholder="Describe your listing"
+                            {...register("description", { required: true })}
+                        ></Textarea>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Image</FormLabel>
+                        <InputGroup>
+                            <InputLeftAddon
+                                as={Button}
+                                onClick={() => uploadRef.current?.click()}
+                            >
+                                Upload File
+                            </InputLeftAddon>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={(e) => {
+                                    ref(e);
+                                    uploadRef.current = e;
+                                }}
+                                {...rest}
+                                style={{ display: "none" }}
+                                onChange={(e) => {
+                                    setImageName(e.target.files?.[0].name);
+                                }}
+                            />
+                            <Input readOnly={true} value={imageName} />
+                        </InputGroup>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>College</FormLabel>
+                        <Input
+                            placeholder="College"
+                            {...register("college", { required: true })}
                         />
-                        <Input readOnly={true} value={imageName} />
-                    </InputGroup>
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>College</FormLabel>
-                    <Input
-                        placeholder="College"
-                        {...register("college", { required: true })}
-                    />
-                </FormControl>
-                <FormControl isRequired={true}>
-                    <FormLabel>Contact Info</FormLabel>
-                    <Textarea
-                        placeholder="Contact info"
-                        {...register("contact", { required: true })}
-                    ></Textarea>
-                </FormControl>
+                    </FormControl>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Contact Info</FormLabel>
+                        <Textarea
+                            placeholder="Contact info"
+                            {...register("contact", { required: true })}
+                        ></Textarea>
+                    </FormControl>
 
-                <Box>
-                    <Button
-                        colorScheme="orange"
-                        onClick={handleSubmit(onSubmit, onError)}
-                    >
-                        Submit
-                    </Button>
-                </Box>
-            </Stack>
-        </Box>
+                    <Box>
+                        <Button
+                            colorScheme="orange"
+                            onClick={handleSubmit(onSubmit, onError)}
+                        >
+                            Submit
+                        </Button>
+                    </Box>
+                </Stack>
+            </Box>
         </>
     );
 }
