@@ -8,7 +8,7 @@ import {
   InputGroup,
   Box,
   Image,
-  Flex,
+  Grid,
   Stack,
   HStack,
 } from "@chakra-ui/react";
@@ -30,35 +30,6 @@ const getArraysIntersection = (a1: Array<string>, a2: Array<string>) => {
   });
 };
 
-const getTripleArraysIntersection = (
-  a1: Array<string>,
-  a2: Array<string>,
-  a3: Array<string>
-) => {
-  if (a1.length > 0 && a2.length > 0 && a3.length > 0) {
-    let intersect1 = getArraysIntersection(a1, a2);
-    return getArraysIntersection(intersect1, a3);
-  } else if (a1.length == 0 && a2.length == 0 && a3.length == 0) {
-    return [];
-  } else {
-    if (a1.length > 0 && a2.length > 0) {
-      return getArraysIntersection(a1, a2);
-    } else if (a1.length > 0 && a3.length > 0) {
-      return getArraysIntersection(a1, a3);
-    } else if (a2.length > 0 && a3.length > 0) {
-      return getArraysIntersection(a2, a3);
-    } else {
-      if (a1.length > 0) {
-        return a1;
-      } else if (a2.length > 0) {
-        return a2;
-      } else {
-        return a3;
-      }
-    }
-  }
-};
-
 const Gallery: NextPage = () => {
   const [listingData, setListingData] = useState<Listing[]>([]);
   // const [filtered, setFiltered] = useState<string[]>([]);
@@ -75,9 +46,10 @@ const Gallery: NextPage = () => {
       .then(
         (result) => {
           setIsLoaded(true);
-          console.log(result);
+          //   console.log(result);
           setListingData(result);
           setAdvancedFiltered(result);
+          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -87,10 +59,15 @@ const Gallery: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log(advancedFiltered);
+    // console.log(advancedFiltered);
   }, [advancedFiltered]);
 
-  const search = (priceMinSearch?: any, priceMaxSearch?: any) => {
+  const search = (
+    priceMinSearch?: any,
+    priceMaxSearch?: any,
+    queryString?: string,
+    collegeString?: string
+  ) => {
     if (!priceMinSearch) {
       priceMinSearch = 0;
     }
@@ -98,6 +75,8 @@ const Gallery: NextPage = () => {
     if (!priceMaxSearch) {
       priceMaxSearch = 400;
     }
+    console.log(priceMaxSearch);
+    console.log(queryString);
 
     const searchOptions = {
       includeScore: true,
@@ -111,57 +90,40 @@ const Gallery: NextPage = () => {
 
     if (isLoaded) {
       const fuse = new Fuse(listingData, searchOptions);
-      let result = [];
-      const searchResult = fuse.search(query).map((x: any) => x.item._id);
+      let result = listingData.map((listing: Listing) => listing._id);
+      if (queryString && queryString.length > 0) {
+        const searchResult = fuse
+          .search(queryString)
+          .map((x: any) => x.item._id);
+        console.log(searchResult);
+        result = getArraysIntersection(result, searchResult);
+      }
       let priceResult = [];
       let collegeResult = [];
-      if (college !== "") {
+      if (collegeString && collegeString !== "") {
         const collegeFuse = new Fuse(listingData, searchCollege);
-        collegeResult = collegeFuse.search(college).map((x: any) => x.item._id);
+        collegeResult = collegeFuse
+          .search(collegeString)
+          .map((x: any) => x.item._id);
+        result = getArraysIntersection(result, collegeResult);
       }
 
-      if (
-        (priceMaxSearch ?? priceMax) !== 400 ||
-        (priceMinSearch ?? priceMin) !== 0
-      ) {
-        priceResult = listingData.filter((listing) => {
-          console.log("priceMax: ", priceMax);
-          console.log("PriceMaxSearch: ", priceMaxSearch);
-          console.log("PriceMin: ", priceMin);
-          console.log("PriceMinSearch: ", priceMinSearch);
-          console.log("Price: ", listing.price);
-          console.log(listing.price <= priceMax);
-
-          console.log(priceMaxSearch ? priceMaxSearch : priceMax);
-          console.log(priceMinSearch ? priceMinSearch : priceMin);
-          return (
-            listing.price <= (priceMaxSearch ? priceMaxSearch : priceMax) &&
-            listing.price >= (priceMinSearch ? priceMinSearch : priceMin)
-          );
-        });
+      if (priceMaxSearch !== 400 || priceMinSearch !== 0) {
+        priceResult = listingData
+          .filter((listing) => {
+            return (
+              listing.price <= priceMaxSearch && listing.price >= priceMinSearch
+            );
+          })
+          .map((listing: Listing) => listing._id);
+        // console.log(priceResult);
+        result = getArraysIntersection(result, priceResult);
       }
-      console.log(collegeResult);
-      console.log(priceResult);
-      console.log(searchResult);
-      console.log(
-        getTripleArraysIntersection(searchResult, collegeResult, priceResult)
-      );
+      console.log(result);
 
-      let filtered = getTripleArraysIntersection(
-        searchResult,
-        collegeResult,
-        priceResult
-      );
-
-      console.log(filtered);
       setAdvancedFiltered(
         listingData.filter((listing: Listing) => {
-          console.log(listing);
-          console.log(filtered);
-          return (
-            filtered.includes(listing._id) ||
-            (query === "" && priceMin == 0 && priceMax == 400 && college == "")
-          );
+          return result.includes(listing._id);
         })
       );
     }
@@ -169,42 +131,41 @@ const Gallery: NextPage = () => {
 
   const findCollege = (e: any) => {
     setCollege(e.target.value);
-    search();
+    search(priceMin, priceMax, query, e.target.value);
   };
 
   const findMinPrice = (e: any) => {
-    console.log(e.target);
     if (!e.target.value) {
       setPriceMin(0);
-      search(0, undefined);
+      search(0, priceMax, query, college);
     } else {
       setPriceMin(parseFloat(e.target.value));
-      search(parseFloat(e.target.value), undefined);
+      search(parseFloat(e.target.value), priceMax, query, college);
     }
   };
 
   const findMaxPrice = (e: any) => {
     if (!e.target.value) {
       setPriceMax(400);
-      search(undefined, 400);
+      search(priceMin, 400, query, college);
     } else {
       setPriceMax(parseFloat(e.target.value));
-      search(undefined, parseFloat(e.target.value))
+      search(priceMin, parseFloat(e.target.value), query, college);
     }
   };
 
   const findQuery = (e: any) => {
+    search(priceMin, priceMax, e.target.value, college);
     setQuery(e.target.value);
-    search();
   };
 
   return (
     <>
       <Container maxW="container.lg">
         <Box w="100px"></Box>
-        <Box>
+        <Box mt="50px" mb="50px" mx="10px">
           <HStack>
-            <InputGroup onChange={search} style={{ borderColor: "#FFC176" }}>
+            <InputGroup style={{ borderColor: "#FFC176" }}>
               <InputLeftElement pointerEvents="none">
                 <SearchIcon color="gray.400" />
               </InputLeftElement>
@@ -214,7 +175,7 @@ const Gallery: NextPage = () => {
                 focusBorderColor="#FFC176"
                 placeholder="Search for item"
                 onChange={findQuery}
-              />
+              ></Input>
             </InputGroup>
             <Input
               type="number"
@@ -237,8 +198,8 @@ const Gallery: NextPage = () => {
           </HStack>
         </Box>
 
-        <Box d="flex">
-          {console.log(advancedFiltered)}
+        <Grid templateColumns="repeat(3, 1fr)" gap={12}>
+          {/* {console.log(advancedFiltered)} */}
           {!error ? (
             isLoaded && advancedFiltered.length > 0 ? (
               advancedFiltered.map((listing: Listing) => (
@@ -267,7 +228,7 @@ const Gallery: NextPage = () => {
           ) : (
             <Box>Error, please try again</Box>
           )}
-        </Box>
+        </Grid>
       </Container>
     </>
   );
