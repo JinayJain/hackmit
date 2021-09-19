@@ -18,6 +18,7 @@
     "@ibm-cloud/cloudant": "^0.0.19",
     "babel-preset-next": "^1.4.0",
     "framer-motion": "^4",
+    "fuse": "^0.4.0",
     "fuse.js": "^6.4.6",
     "next": "11.1.2",
     "react": "17.0.2",
