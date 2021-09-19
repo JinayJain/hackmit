@@ -189,18 +189,24 @@ const Gallery: NextPage = () => {
                             ></Input>
                         </InputGroup>
                         <Input
+                            style={{ borderColor: "#FFC176" }}
+                            focusBorderColor="#FFC176"
                             type="number"
                             w="1sm"
                             onChange={findMinPrice}
                             placeholder="Min Price"
                         ></Input>
                         <Input
+                            style={{ borderColor: "#FFC176" }}
+                            focusBorderColor="#FFC176"
                             type="number"
                             w="1sm"
                             onChange={findMaxPrice}
                             placeholder="Max Price"
                         ></Input>
                         <Input
+                            style={{ borderColor: "#FFC176" }}
+                            focusBorderColor="#FFC176"
                             type="search"
                             w="1xl"
                             onChange={findCollege}
