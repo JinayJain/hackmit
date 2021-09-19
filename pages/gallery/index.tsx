@@ -11,6 +11,8 @@ import {
   Grid,
   Stack,
   HStack,
+  LinkBox,
+  LinkOverlay
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
@@ -203,24 +205,28 @@ const Gallery: NextPage = () => {
           {!error ? (
             isLoaded && advancedFiltered.length > 0 ? (
               advancedFiltered.map((listing: Listing) => (
-                <Box
+                <LinkBox
                   key={listing._id}
-                  maxW="sm"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  m="10px"
-                  className={styles.card}
                 >
-                  <Image src={listing.image} alt="listing picture"></Image>
-                  <Box p="3">
-                    <Box fontWeight="bold" fontSize="2xl" as="h2">
-                      {listing.name}
-                    </Box>
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    m="10px"
+                    className={styles.card}
+                  >
+                    <LinkOverlay href={`/listing/${listing._id}`}></LinkOverlay>
+                    <Image src={listing.image} alt="listing picture"></Image>
+                    <Box p="3">
+                      <Box fontWeight="bold" fontSize="2xl" as="h2">
+                        {listing.name}
+                      </Box>
 
-                    <Box>${listing.price}</Box>
+                      <Box>${listing.price}</Box>
+                    </Box>
                   </Box>
-                </Box>
+                </LinkBox>
               ))
             ) : (
               <Box>No items founds</Box>
