@@ -9,13 +9,6 @@ import {
 
 const theme = extendTheme(
   {
-    styles: {
-      global: {
-        body: {
-          bg: "#f5f5f5",
-        },
-      },
-    },
     fonts: {
       heading: "Poppins",
       body: "Poppins",
