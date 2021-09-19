@@ -21,6 +21,8 @@ import {
     useDisclosure,
     LinkBox,
     LinkOverlay,
+    HStack,
+    Tag,
     AspectRatio,
     Heading,
     Text,
@@ -35,6 +37,7 @@ interface Listing {
     price: number;
     college: string;
     contact: string;
+    tags: string[];
 }
 
 interface router {
@@ -194,34 +197,40 @@ export default function Listing() {
                             listings.slice(0, 9).map((listing: Listing) => (
                                 <LinkBox key={listing._id}>
                                     <Box
-                                        maxW="sm"
-                                        borderWidth="1px"
-                                        borderRadius="lg"
-                                        overflow="hidden"
-                                        m="10px"
-                                        className={styles.card}
-                                    >
-                                        <LinkOverlay
-                                            href={`/listing/${listing._id}`}
-                                        ></LinkOverlay>
-                                        <AspectRatio maxW="400px" ratio={1 / 1}>
-                                            <Image
-                                                src={listing.image}
-                                                alt="listing picture"
-                                            ></Image>
-                                        </AspectRatio>
-                                        <Box p="3">
-                                            <Box
-                                                fontWeight="bold"
-                                                fontSize="2xl"
-                                                as="h2"
-                                            >
-                                                {listing.name}
-                                            </Box>
-
-                                            <Box>${listing.price}</Box>
-                                        </Box>
+                                    maxW="sm"
+                                    borderWidth="1px"
+                                    borderRadius="lg"
+                                    overflow="hidden"
+                                    m="10px"
+                                    className={styles.card}
+                                >
+                                    <LinkOverlay href={`/listing/${listing._id}`}>
+                                    </LinkOverlay>
+                                    <AspectRatio maxW="400px" ratio={1/1}>
+                                    <Image
+                                        src={listing.image}
+                                        alt="listing picture"
+                                    ></Image>
+                                    </AspectRatio>
+                                    <Box pl="10px">
+                                        <HStack pt="5px">
+                                          {listing.tags.map((tag, index)=> (
+                                            <Tag colorScheme="orange" key={`${tag}${index}`}>{tag}</Tag>
+                                          ))};
+                                        </HStack>
                                     </Box>
+                                    <Box p="10px"> 
+                                        <Box
+                                            fontWeight="bold"
+                                            fontSize="2xl"
+                                            as="h2"
+                                        >
+                                            {listing.name}
+                                        </Box>
+
+                                        <Box>${listing.price}</Box>
+                                    </Box>
+                                </Box>
                                 </LinkBox>
                             ))
                         ) : (

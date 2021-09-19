@@ -17,6 +17,8 @@ import {
     useBreakpointValue,
     useDisclosure,
     Image,
+    LinkBox,
+    LinkOverlay,
 } from "@chakra-ui/react";
 import {
     HamburgerIcon,
@@ -63,7 +65,11 @@ export default function WithSubnavigation() {
                     flex={{ base: 1 }}
                     justify={{ base: "center", md: "start" }}
                 >
+                  <LinkBox>
+                  <LinkOverlay href="/home">
                     <Image w="30px" h="30px" src="/logo.svg"></Image>
+                  </LinkOverlay>
+                  </LinkBox>
 
                     <Flex display={{ base: "none", md: "flex" }} ml={10}>
                         <DesktopNav />

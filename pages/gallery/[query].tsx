@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import {
     Container,
     InputLeftElement,
@@ -10,19 +11,14 @@ import {
     Image,
     Grid,
     Stack,
-    HStack,
-    LinkBox,
-    LinkOverlay,
     Spinner,
-    AspectRatio,
+    HStack,
     Tag,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
 import styles from "./gallery.module.css";
 import NavBar from "../../components/NavBar";
-import { useRouter } from "next/router";
-
 interface Listing {
     _id: string;
     name: string;
@@ -40,46 +36,54 @@ const getArraysIntersection = (a1: Array<string>, a2: Array<string>) => {
 
 const Gallery: NextPage = () => {
     const router = useRouter();
-
-    const { college: collegeSearch } = router.query;
-
     const [listingData, setListingData] = useState<Listing[]>([]);
     // const [filtered, setFiltered] = useState<string[]>([]);
     const [query, setQuery] = useState("");
     const [priceMax, setPriceMax] = useState(400);
     const [priceMin, setPriceMin] = useState(0);
-    const [college, setCollege] = useState(() => {
-        if (collegeSearch) {
-            return collegeSearch as string;
-        } else {
-            return "";
-        }
-    });
+    const [college, setCollege] = useState(
+        !Array.isArray(router.query.query) ? router.query.query : ""
+    );
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
     const [advancedFiltered, setAdvancedFiltered] = useState<Listing[]>([]);
     useEffect(() => {
-        fetch("/api/listing")
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    //   console.log(result);
-                    setListingData(result);
-                    setAdvancedFiltered(result);
-                    console.log(result);
-                    setIsLoaded(true);
-                },
-                (error) => {
-                    setError(error);
-                    setIsLoaded(true);
-                }
-            );
+        // fetch("/api/listing")
+        //     .then((res) => res.json())
+        //     .then(
+        //         (result) => {
+        //             setIsLoaded(true);
+        //             //   console.log(result);
+        //             setListingData(result);
+        //             setAdvancedFiltered(result);
+        //             console.log(result);
+        //             if (!Array.isArray(router.query.query)) {
+        //                 console.log("HERE");
+        //                 search(priceMin, priceMax, query, router.query.query);
+        //             }
+        //         },
+        //         (error) => {
+        //             setIsLoaded(true);
+        //             setError(error);
+        //         }
+        //     );
+          
+            setListingData([
+              {
+                "_id": "123214214321",
+                "price": 12,
+                "name": "test",
+                "description":"testing",
+                "image": "testing more",
+                "college": "University of Delaware",
+                "tags": ["test", "test1", "test2"]
+              }
+            ])
     }, []);
 
     useEffect(() => {
-        search(priceMin, priceMax, query, collegeSearch as string);
-        console.log(isLoaded);
-    }, [isLoaded]);
+        // console.log(advancedFiltered);
+    }, [advancedFiltered]);
 
     const search = (
         priceMinSearch?: any,
@@ -181,7 +185,7 @@ const Gallery: NextPage = () => {
 
     return (
         <>
-            <NavBar></NavBar>
+          <NavBar/>
             <Container maxW="container.lg">
                 <Box w="100px"></Box>
                 <Box mt="50px" mb="30px" mx="10px">
@@ -221,7 +225,7 @@ const Gallery: NextPage = () => {
                             w="1xl"
                             onChange={findCollege}
                             placeholder="University"
-                            defaultValue={college}
+                            defaultValue={router.query.query}
                         ></Input>
                     </HStack>
                 </Box>
@@ -232,69 +236,45 @@ const Gallery: NextPage = () => {
                         isLoaded ? (
                             advancedFiltered.length > 0 ? (
                                 advancedFiltered.map((listing: Listing) => (
-                                    <LinkBox key={listing._id}>
-                                        <Box
-                                            maxW="sm"
-                                            borderWidth="1px"
-                                            borderRadius="lg"
-                                            overflow="hidden"
-                                            m="10px"
-                                            className={styles.card}
-                                        >
-                                            <LinkOverlay
-                                                href={`/listing/${listing._id}`}
-                                            ></LinkOverlay>
-                                            <AspectRatio
-                                                maxW="400px"
-                                                ratio={1 / 1}
-                                            >
-                                                <Image
-                                                    src={listing.image}
-                                                    alt="listing picture"
-                                                ></Image>
-                                            </AspectRatio>
-                                            <Box pl="10px">
-                                                <HStack pt="5px">
-                                                    {listing.tags.map(
-                                                        (tag, index) => (
-                                                            <Tag
-                                                                colorScheme="orange"
-                                                                key={`${tag}${index}`}
-                                                            >
-                                                                {tag}
-                                                            </Tag>
-                                                        )
-                                                    )}
-                                                    ;
-                                                </HStack>
-                                            </Box>
-                                            <Box p="3">
-                                                <Box
-                                                    fontWeight="bold"
-                                                    fontSize="2xl"
-                                                    as="h2"
-                                                >
-                                                    {listing.name}
-                                                </Box>
+                                    <Box
+                                        key={listing._id}
+                                        maxW="sm"
+                                        borderWidth="1px"
+                                        borderRadius="lg"
+                                        overflow="hidden"
+                                        m="10px"
+                                        className={styles.card}
+                                    >
+                                        <Image
+                                            src={listing.image}
+                                            alt="listing picture"
+                                        ></Image>
 
-                                                <Box>${listing.price}</Box>
+                                        
+                                        <Box p="3">
+                                            <Box
+                                                fontWeight="bold"
+                                                fontSize="2xl"
+                                                as="h2"
+                                            >
+                                                {listing.name}
                                             </Box>
+
+                                            <Box>${listing.price}</Box>
                                         </Box>
-                                    </LinkBox>
+                                    </Box>
                                 ))
                             ) : (
                                 <Box>No items founds</Box>
                             )
                         ) : (
-                            <Box>
-                                <Spinner
-                                    thickness="4px"
-                                    speed="0.65s"
-                                    emptyColor="gray.200"
-                                    color="blue.500"
-                                    size="xl"
-                                />
-                            </Box>
+                            <Spinner
+                                thickness="4px"
+                                speed="0.65s"
+                                emptyColor="gray.200"
+                                color="blue.500"
+                                size="xl"
+                            />
                         )
                     ) : (
                         <Box>Error, please try again</Box>
