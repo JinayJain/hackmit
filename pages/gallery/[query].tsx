@@ -17,7 +17,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import Fuse from "fuse.js";
 import styles from "./gallery.module.css";
-
+import NavBar from "../../components/NavBar";
 interface Listing {
     _id: string;
     name: string;
@@ -171,6 +171,7 @@ const Gallery: NextPage = () => {
 
     return (
         <>
+          <NavBar/>
             <Container maxW="container.lg">
                 <Box w="100px"></Box>
                 <Box mt="50px" mb="30px" mx="10px">

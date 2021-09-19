@@ -11,6 +11,8 @@ import { GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
 import { useToast } from "@chakra-ui/toast";
 import { ContainerAuthenticator } from "ibm-cloud-sdk-core";
+import NavBar from "../components/NavBar";
+
 
 function Create() {
     const toast = useToast();
@@ -83,6 +85,8 @@ function Create() {
     }
 
     return (
+        <>
+        <NavBar/>
         <Box maxW="1000px" margin="auto">
             <Heading mt={8} mb={4}>
                 Create Listing
@@ -161,6 +165,7 @@ function Create() {
                 </Box>
             </Stack>
         </Box>
+        </>
     );
 }
 
