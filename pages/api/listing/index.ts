@@ -24,6 +24,17 @@ export default async function handler(
                 const { title, description, image, price, college, contact } =
                     req.body;
 
+                if (
+                    !title ||
+                    !description ||
+                    !image ||
+                    !price ||
+                    !college ||
+                    !contact
+                ) {
+                    throw new Error("Missing required fields");
+                }
+
                 console.log(title, description, image, price, college, contact);
 
                 const response = await db.postDocument({

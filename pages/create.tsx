@@ -10,9 +10,10 @@ import storage from "../util/storage";
 import { GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
 import { useToast } from "@chakra-ui/toast";
-import { ContainerAuthenticator } from "ibm-cloud-sdk-core";
+import { useRouter } from "next/dist/client/router";
 
 function Create() {
+    const router = useRouter();
     const toast = useToast();
     const {
         register,
@@ -63,6 +64,13 @@ function Create() {
             });
 
             console.log(res);
+
+            toast({
+                title: "Listing created!",
+                status: "success",
+            });
+
+            router.push("/");
         } catch (err) {
             console.log(err);
 
