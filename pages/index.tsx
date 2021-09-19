@@ -6,8 +6,11 @@ import Fuse from "fuse.js";
 
 import theme from "../styles/suggest.module.css";
 import NavBar from "../components/NavBar";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+    const router = useRouter();
+
     const [schools, setSchools] = useState<string[]>([]);
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -95,7 +98,13 @@ const Home: NextPage = () => {
                                     }}
                                 />
                             </Flex>
-                            <Button mt="4" colorScheme="orange">
+                            <Button
+                                mt="4"
+                                colorScheme="orange"
+                                onClick={() =>
+                                    router.push(`/gallery?college=${query}`)
+                                }
+                            >
                                 Begin your handoff
                             </Button>
                         </Box>

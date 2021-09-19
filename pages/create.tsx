@@ -111,7 +111,7 @@ function Create() {
                     </FormControl>
                     <FormControl isRequired={true}>
                         <FormLabel>Price</FormLabel>
-                        <NumberInput precision={2}>
+                        <NumberInput precision={2} min={0}>
                             <NumberInputField
                                 placeholder="$"
                                 {...register("price", { required: true })}
