@@ -45,17 +45,18 @@ export default async function handler(
 
                     // generate a list of tags from the description using the IBM Watson NLU API
 
-                    const tags = await nlu
-                        .analyze({
-                            text: description,
-                            features: {
-                                keywords: {
-                                    limit: 3,
+                    const tags =
+                        (await nlu
+                            .analyze({
+                                text: description,
+                                features: {
+                                    keywords: {
+                                        limit: 3,
+                                    },
                                 },
-                            },
-                        })
-                        .then((response) => response.result.keywords)
-                        .then((kws) => kws?.map((kw) => kw.text));
+                            })
+                            .then((response) => response.result.keywords)
+                            .then((kws) => kws?.map((kw) => kw.text))) ?? [];
 
                     console.log(tags);
 

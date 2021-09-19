@@ -99,6 +99,8 @@ const Home: NextPage = () => {
                                 />
                             </Flex>
                             <Button
+                                variant="outline"
+                                bg="white"
                                 mt="4"
                                 colorScheme="orange"
                                 onClick={() =>
